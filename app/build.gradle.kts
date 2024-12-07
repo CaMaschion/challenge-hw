@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.retrofit.rxjava.adapter)
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit.converter.gson)
 
     // RxJava
     implementation(libs.rxjava)
@@ -68,6 +69,7 @@ dependencies {
     implementation(libs.hilt.lifecycle.viewmodel)
     implementation(libs.hilt.android)
 
+    testImplementation(libs.mockk)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
