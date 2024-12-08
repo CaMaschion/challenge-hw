@@ -1,7 +1,7 @@
 package com.challenge_hw.ui.presentation
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,15 +32,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.challenge_hw.R
 import com.challenge_hw.data.models.Property
-import com.challenge_hw.data.repository.PropertyRepository
-import com.challenge_hw.data.service.PropertyApi
-import com.challenge_hw.ui.theme.ChallengehwTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PropertyListScreen(viewModel: PropertyViewModel) {
+fun PropertyListScreen(
+    viewModel: PropertyViewModel,
+    navigation: NavHostController
+) {
 
     val properties = viewModel.propertiesState
 
@@ -49,9 +50,7 @@ fun PropertyListScreen(viewModel: PropertyViewModel) {
     }
 
     Scaffold(
-        topBar = {
-            StyledTopAppBar()
-        }
+        topBar = { StyledTopAppBar() }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -60,7 +59,7 @@ fun PropertyListScreen(viewModel: PropertyViewModel) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(properties.size) { index ->
-                PropertyItem(property = properties[index])
+                PropertyItem(property = properties[index], navigation)
             }
         }
     }
@@ -88,7 +87,10 @@ fun StyledTopAppBar() {
 
 //this is the property item component
 @Composable
-fun PropertyItem(property: Property) {
+fun PropertyItem(
+    property: Property,
+    navigation: NavHostController
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,6 +104,9 @@ fun PropertyItem(property: Property) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .clickable {
+                    navigation.navigate("property_details/${property.id}")
+                }
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -156,9 +161,9 @@ fun PropertyItem(property: Property) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewPropertyListScreen() {
-    ChallengehwTheme {
-        PropertyListScreen(
-            viewModel = PropertyViewModel(PropertyRepository(PropertyApi()))
-        )
-    }
+//    ChallengehwTheme {
+//        PropertyListScreen(
+//            viewModel = PropertyViewModel(PropertyRepository(PropertyApi())),
+//            navController = NavHostController()
+//    }
 }
