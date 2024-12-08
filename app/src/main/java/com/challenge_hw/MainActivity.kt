@@ -5,8 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,7 @@ import com.challenge_hw.ui.presentation.PropertyDetailScreen
 import com.challenge_hw.ui.theme.ChallengehwTheme
 import com.challenge_hw.ui.presentation.PropertyListScreen
 import com.challenge_hw.ui.presentation.PropertyViewModel
+import com.challenge_hw.ui.presentation.StyledTopAppBar
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -25,7 +27,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChallengehwTheme {
-                ChallengeApp()
+                Scaffold(
+                    topBar = { StyledTopAppBar() },
+                    content = { ChallengeApp() }
+                )
             }
         }
     }
@@ -33,7 +38,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ChallengeApp(
-    viewModel: PropertyViewModel = PropertyViewModel(PropertyRepository(PropertyApi())),
+    viewModel: PropertyViewModel = PropertyViewModel(
+        SavedStateHandle(),
+        PropertyRepository(PropertyApi())
+    ),
     navController: NavHostController = rememberNavController()
 ) {
 
@@ -42,8 +50,15 @@ fun ChallengeApp(
             PropertyListScreen(viewModel = viewModel, navigation = navController)
         }
         composable("property_details/{propertyId}") { backStackEntry ->
+            val propertyId = backStackEntry.arguments?.getString("propertyId")
+            val property = viewModel.propertiesState.find {
+                it.id == propertyId?.toInt()
+            }
 
-            PropertyDetailScreen(propertyId = backStackEntry.arguments?.getString("propertyId"))
+            PropertyDetailScreen(
+                property = property,
+                navController = navController
+            )
         }
     }
 }

@@ -49,20 +49,17 @@ fun PropertyListScreen(
         viewModel.fetchProperties()
     }
 
-    Scaffold(
-        topBar = { StyledTopAppBar() }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(properties.size) { index ->
-                PropertyItem(property = properties[index], navigation)
-            }
+        items(properties.size) { index ->
+            PropertyItem(property = properties[index], navigation)
         }
     }
+
 }
 
 //this is the top app bar component
@@ -72,8 +69,9 @@ fun StyledTopAppBar() {
     TopAppBar(
         title = {
             Text(
-                text = "Property List",
-                modifier = Modifier.fillMaxWidth(),
+                text = "Hostelworld Challenge",
+                modifier = Modifier
+                    .fillMaxWidth(),
                 style = MaterialTheme.typography.titleLarge,
                 color = colorResource(id = R.color.purple_700),
                 textAlign = TextAlign.Center

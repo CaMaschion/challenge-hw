@@ -1,56 +1,143 @@
 package com.challenge_hw.ui.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.challenge_hw.data.models.City
-import com.challenge_hw.data.models.FreeCancellation
-import com.challenge_hw.data.models.Location
-import com.challenge_hw.data.models.Price
+import androidx.navigation.NavHostController
 import com.challenge_hw.data.models.Property
 
 @Composable
 fun PropertyDetailScreen(
-    propertyId: String?
+    navController: NavHostController,
+    property: Property?
 ) {
-    // Aqui você pode buscar os detalhes da propriedade com o `propertyId` ou simular os dados
-    val property = getPropertyById(propertyId)  // Este método seria uma busca em uma base de dados ou API
-
-    property.let {
+    if (property == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Loading property details...", style = MaterialTheme.typography.bodyLarge)
+        }
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(text = it.name, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Description: ${it.overview}", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = property.name,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = "Rating: ${property.starRating}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                if (property.isFeatured) {
+                    Text(
+                        text = "★",
+                        style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
+
+            Text(
+                text = "Price: From ${property.lowestPricePerNight.value} ${property.lowestPricePerNight.currency} / night",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Text(
+                text = "Location:",
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            Text(
+                text = buildingLocation(property),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            if (property.location?.region != null) {
+                Text(
+                    text = "Region: ${property.location.region}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Price: From $${it.lowestPricePerNight.value}/night", style = MaterialTheme.typography.titleSmall)
+
+            Text(
+                text = "Overview:",
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = property.overview,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            if (property.freeCancellationAvailable) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = "Free Cancellation:",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = property.freeCancellation.label,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Back")
+            }
         }
     }
 }
 
-fun getPropertyById(propertyId: String?): Property {
-    // Simulação de uma busca de propriedade por ID
-    return Property(
-        id = 1,
-        name = "Sample Property",
-        overview = "This is a detailed description of the property.",
-        lowestPricePerNight = Price(100.0.toString(), "USD"),
-        starRating = 4.5,
-        isFeatured = true,
-        type = "Hotel",
-        address1 = "1234 Elm Street",
-        freeCancellationAvailable = true,
-        freeCancellation = FreeCancellation("Free Cancellation", "You can cancel your reservation for free."),
-        location = Location(City(1, "City", 1, "Country"), "Region")
-    )
+private fun buildingLocation(property: Property): String {
+    if (property.location?.city == null) {
+        return "Unknown"
+    }
+    return "${property.location.city.name}, ${property.location.city.country}, ${property.location.region}"
 }

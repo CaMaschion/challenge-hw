@@ -14,7 +14,7 @@ data class Property(
     val freeCancellationAvailable: Boolean,
     val freeCancellation: FreeCancellation,
     val lowestPricePerNight: Price,
-    val location: Location,
+    val location: Location?,
     val overview: String,
 )
 
@@ -29,7 +29,7 @@ data class FreeCancellation(
 )
 
 data class Location(
-    val city: City,
+    val city: City?,
     val region: String?
 )
 
