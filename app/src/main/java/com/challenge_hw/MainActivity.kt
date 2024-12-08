@@ -10,12 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.challenge_hw.data.repository.PropertyRepository
+import com.challenge_hw.data.repository.RateRepository
+import com.challenge_hw.data.service.CurrencyApi
 import com.challenge_hw.data.service.PropertyApi
 import com.challenge_hw.ui.presentation.PropertyDetailScreen
 import com.challenge_hw.ui.theme.ChallengehwTheme
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ChallengehwTheme {
                 Scaffold(
-                    topBar = { StyledTopAppBar()},
+                    topBar = { StyledTopAppBar() },
                     content = { innerPadding ->
                         Box(modifier = Modifier.padding(innerPadding)) {
                             ChallengeApp()
@@ -46,7 +47,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ChallengeApp(
     viewModel: PropertyViewModel = PropertyViewModel(
-        PropertyRepository(PropertyApi())
+        PropertyRepository(PropertyApi()),
+        RateRepository(CurrencyApi())
     ),
     navController: NavHostController = rememberNavController()
 ) {
