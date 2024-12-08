@@ -2,11 +2,15 @@ package com.challenge_hw.ui.presentation
 
 import android.text.Spanned
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -56,20 +60,63 @@ fun PropertyDetailScreen(
                     text = "Rating: ${property.starRating}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                if (property.isFeatured) {
-                    Text(
-                        text = "★",
-                        style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.primary)
-                    )
-                }
             }
 
-            Text(
-                text = "Price: From ${property.lowestPricePerNight.value} ${property.lowestPricePerNight.currency} / night",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Price: From ${property.lowestPricePerNight.value} ${property.lowestPricePerNight.currency} / night",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .weight(1f)
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = { /* TODO: Implement EUR */ },
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 64.dp)
+                            .height(36.dp),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        )
+                    ) {
+                        Text(
+                            text = "EUR",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
+                    Button(
+                        onClick = { /* TODO: Implement USD */ },
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 64.dp)
+                            .height(36.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(text = "USD", style = MaterialTheme.typography.bodySmall)
+                    }
+
+                    Button(
+                        onClick = { /* TODO: Implement GBP */ },
+                        modifier = Modifier
+                            .defaultMinSize(minWidth = 64.dp)
+                            .height(36.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(text = "GBP", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
 
             Text(
                 text = "Location:",
