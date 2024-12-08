@@ -26,6 +26,7 @@ fun PropertyDetailScreen(
     navController: NavHostController,
     property: Property?
 ) {
+
     if (property == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
