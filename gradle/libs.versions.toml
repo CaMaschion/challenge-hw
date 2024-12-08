@@ -10,6 +10,7 @@ activityCompose = "1.9.3"
 composeBom = "2024.04.01"
 retrofit = "2.9.0"
 rxjava = "3.1.7"
+rxKotlin = "3.0.1"
 rxandroid = "3.0.2"
 moshi = "1.15.0"
 hilt = "2.48"
@@ -33,6 +34,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version.ref = "rxKotlin" }
 
 # Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }

@@ -7,7 +7,7 @@ data class PropertyResponse(
 data class Property(
     val id: Int,
     val name: String,
-    val starRating: Int,
+    val starRating: Double,
     val isFeatured: Boolean,
     val type: String,
     val address1: String,
