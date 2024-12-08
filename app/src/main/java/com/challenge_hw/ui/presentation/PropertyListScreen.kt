@@ -1,6 +1,7 @@
-package com.challenge_hw.ui.theme.presentation
+package com.challenge_hw.ui.presentation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -31,31 +33,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.challenge_hw.R
+import com.challenge_hw.data.models.Property
+import com.challenge_hw.data.repository.PropertyRepository
+import com.challenge_hw.data.service.PropertyApi
 import com.challenge_hw.ui.theme.ChallengehwTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-
-//mock
-data class Property(
-    val name: String,
-    val isFeatured: Boolean,
-    val rating: Double,
-    val pricePerNight: Double
-)
-
-fun getMockProperties(): List<Property> {
-    return listOf(
-        Property("Beachside Paradise", true, 9.3, 299.99),
-        Property("Mountain Retreat", false, 8.7, 150.00),
-        Property("City Center Luxury", true, 8.4, 499.50),
-        Property("Cozy Cottage", false, 7.9, 99.99),
-        Property("Modern Apartment", false, 9.1, 200.00)
-    )
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PropertyListScreen(properties: List<Property>) {
+fun PropertyListScreen(viewModel: PropertyViewModel) {
+
+    val properties = viewModel.propertiesState
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchProperties()
+    }
+
     Scaffold(
         topBar = {
             StyledTopAppBar()
@@ -89,7 +81,7 @@ fun StyledTopAppBar() {
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(id = R.color.orange_secondary), 
+            containerColor = colorResource(id = R.color.orange_secondary),
         )
     )
 }
@@ -103,7 +95,8 @@ fun PropertyItem(property: Property) {
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,)
+            containerColor = MaterialTheme.colorScheme.surface,
+        )
     ) {
         Column(
             modifier = Modifier
@@ -139,7 +132,7 @@ fun PropertyItem(property: Property) {
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
                     Text(
-                        text = "⭐ ${property.rating}",
+                        text = "⭐ ${String.format("%.1f", property.starRating)}",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -147,10 +140,12 @@ fun PropertyItem(property: Property) {
                 }
             }
 
+//            Log.d("API Response", "Star Rating: ${property.starRating}")
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "From $${property.pricePerNight}/night",
+                text = "From $${property.lowestPricePerNight.value}/night",
                 fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
                 color = colorResource(id = R.color.orange_primary)
             )
@@ -162,6 +157,8 @@ fun PropertyItem(property: Property) {
 @Composable
 fun PreviewPropertyListScreen() {
     ChallengehwTheme {
-        PropertyListScreen(properties = getMockProperties())
+        PropertyListScreen(
+            viewModel = PropertyViewModel(PropertyRepository(PropertyApi()))
+        )
     }
 }

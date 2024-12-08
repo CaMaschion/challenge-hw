@@ -8,9 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.challenge_hw.data.repository.PropertyRepository
+import com.challenge_hw.data.service.PropertyApi
 import com.challenge_hw.ui.theme.ChallengehwTheme
-import com.challenge_hw.ui.theme.presentation.PropertyListScreen
-import com.challenge_hw.ui.theme.presentation.getMockProperties
+import com.challenge_hw.ui.presentation.PropertyListScreen
+import com.challenge_hw.ui.presentation.PropertyViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -20,7 +22,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ChallengehwTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    PropertyListScreen(getMockProperties())
+                    PropertyListScreen(
+                        PropertyViewModel(PropertyRepository(PropertyApi()))
+                    )
                 }
             }
         }

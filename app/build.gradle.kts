@@ -62,6 +62,7 @@ dependencies {
     // RxJava
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
+    implementation(libs.rxkotlin)
 
     // Hilt
     ksp(libs.hilt.compiler)
