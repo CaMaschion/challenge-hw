@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ChallengeApp(
     viewModel: PropertyViewModel = PropertyViewModel(
-        SavedStateHandle(),
         PropertyRepository(PropertyApi())
     ),
     navController: NavHostController = rememberNavController()
