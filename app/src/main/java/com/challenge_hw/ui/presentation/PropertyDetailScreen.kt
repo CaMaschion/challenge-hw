@@ -1,5 +1,6 @@
 package com.challenge_hw.ui.presentation
 
+import android.text.Spanned
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import androidx.navigation.NavHostController
 import com.challenge_hw.data.models.Property
 
@@ -96,7 +98,7 @@ fun PropertyDetailScreen(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
-                text = property.overview,
+                text = formatHTMLContent(property).toString(),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -134,6 +136,13 @@ fun PropertyDetailScreen(
             }
         }
     }
+}
+
+private fun formatHTMLContent(property: Property): Spanned {
+    return HtmlCompat.fromHtml(
+        property.overview,
+        HtmlCompat.FROM_HTML_MODE_LEGACY
+    )
 }
 
 private fun buildingLocation(property: Property): String {
